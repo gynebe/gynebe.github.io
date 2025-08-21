@@ -1,1 +1,19 @@
-let buttons=document.querySelectorAll("button"),body=document.querySelector("body");buttons.forEach(t=>t.addEventListener("click",t=>{let e=t.target.closest("button").parentElement.nextElementSibling;t=e.querySelectorAll(".insurence");e.classList.contains("appear")?e.classList.remove("appear"):setTimeout(()=>e.classList.add("appear"),100),e.classList.toggle("active"),setTimeout(()=>e.classList.toggle("transition"),100),t.forEach(t=>t.classList.toggle("active"))}));
+const buttons = document.querySelectorAll("button");
+const body = document.querySelector("body");
+
+buttons.forEach(button => button.addEventListener("click", (event) => {
+    const target = event.target.closest("button");
+    const divTarget = target.parentElement.nextElementSibling;
+
+    let list = divTarget.querySelectorAll(".insurence");
+
+    if (divTarget.classList.contains("appear")) {
+        divTarget.classList.remove("appear");
+    } else {
+        setTimeout(() => divTarget.classList.add("appear"), 100);
+    }
+
+    divTarget.classList.toggle("active");
+    setTimeout(() => divTarget.classList.toggle("transition"), 100);
+    list.forEach(li => li.classList.toggle("active"));
+}));

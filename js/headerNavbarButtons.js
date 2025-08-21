@@ -1,1 +1,35 @@
-let headerNav=document.querySelector(".headerNav"),menu=headerNav.querySelector(".sf-menu"),menuOptions=headerNav.querySelectorAll(".sf-menu > li"),clinica=menu.querySelector(".sf-menu > li:nth-child(4)"),contacts=menu.querySelector(".sf-menu > li:nth-child(5)");function menuPrevent(e,n){(e=e||window.event).target.closest("li")===n&&e.preventDefault(),menuOptions.forEach(e=>{e.classList.add("closed")}),n.querySelectorAll("li").forEach(e=>{setTimeout(()=>e.classList.add("block"),1600),setTimeout(()=>e.classList.add("open"),1700)})}clinica.addEventListener("click",e=>{window.innerWidth<1024&&menuPrevent(e,clinica)}),contacts.addEventListener("click",e=>{window.innerWidth<1024&&menuPrevent(e,contacts)});
+const headerNav = document.querySelector(".headerNav");
+const menu = headerNav.querySelector(".sf-menu");
+const menuOptions = headerNav.querySelectorAll(".sf-menu > li");
+const clinica = menu.querySelector(".sf-menu > li:nth-child(4)");
+const contacts = menu.querySelector(".sf-menu > li:nth-child(5)");
+
+clinica.addEventListener("click", (event) => {
+    if (window.innerWidth < 1024) {
+        menuPrevent(event, clinica);
+    }
+});
+
+contacts.addEventListener("click", (event) => {
+    if (window.innerWidth < 1024) {
+        menuPrevent(event, contacts);
+    }
+});
+
+function menuPrevent(event, option) {
+    event = event || window.event;
+    const target = event.target.closest("li");
+    if (target === option) {
+        event.preventDefault();
+    }
+
+    menuOptions.forEach(li => {
+        li.classList.add("closed");
+    })
+
+    const menuSecondOptions = option.querySelectorAll("li");
+    menuSecondOptions.forEach(li => {
+        setTimeout(() => li.classList.add("block"), 1600)
+        setTimeout(() => li.classList.add("open"), 1700);
+    })
+}

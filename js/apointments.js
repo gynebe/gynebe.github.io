@@ -1,12 +1,255 @@
-import emailjs from"@emailjs/browser";emailjs.init("c0UqVFYtByUWzi-5c");let availability={Porto:{1:{daySlots:{2:[{start:"10:20",end:"13:20"},{start:"15:00",end:"19:00"}],5:[{start:"10:20",end:"13:20"},{start:"15:00",end:"19:00"}]}},2:{daySlots:{2:[{start:"15:00",end:"18:00"}]}}},"Santo Tirso":{1:{daySlots:{1:[{start:"15:00",end:"19:00"}],3:[{start:"09:00",end:"12:40"}]}}}},currentStep=0,currentLang=document.documentElement.lang||"pt-PT",steps=document.querySelectorAll(".form-step"),form=document.getElementById("appointmentForm"),weekLabel=document.getElementById("weekLabel"),calendarTable=document.getElementById("calendarTable"),selectedSlotInput=document.getElementById("selectedSlot"),specialty=form.elements.specialty,location=form.elements.location,currentYear=(new Date).getFullYear(),currentMonth=(new Date).getMonth(),currentMonday=getMonday(new Date(currentYear,currentMonth,1));function showStep(n){steps.forEach((e,t)=>e.classList.toggle("active",t===n))}function getMonday(e){var t=(e=new Date(e)).getDay(),t=e.getDate()-t+(0===t?-6:1);return new Date(e.setDate(t))}function timeToDate(e,t){var[t,n]=t.split(":").map(Number),e=new Date(e);return e.setHours(t,n,0,0),e}function generateTimeSlotsForDate(e,t,n,a){var r=[];let o=timeToDate(e,t);for(var l=timeToDate(e,n);o<=l;)r.push(new Date(o)),o=new Date(o.getTime()+6e4*a);return r}function renderCalendar(a){selectedSlotInput.value="";let r=availability[location.value]?.[specialty.selectedIndex];var e=document.querySelector(".calendar"),t=new Date(currentYear,currentMonth,1),t=t.toLocaleString(currentLang,{month:"long"})+" "+t.getFullYear();if(weekLabel.innerHTML=`
+// npm run build
+
+import emailjs from '@emailjs/browser';
+
+emailjs.init("c0UqVFYtByUWzi-5c");
+
+const availability = {
+    "Porto": {
+        1: { // Ginecologia/Obstetrícia
+            daySlots: {
+                2: [  // Tuesday
+                    { start: "10:20", end: "13:20" },
+                    { start: "15:00", end: "19:00" }
+                ],
+                5: [  // Friday
+                    { start: "10:20", end: "13:20" },
+                    { start: "15:00", end: "19:00" }
+                ]
+            }
+        },
+        2: { // Pediatria
+            daySlots: {
+                2: [
+                    { start: "15:00", end: "18:00" }
+                ]
+            }
+        }
+    },
+    "Santo Tirso": {
+        1: { // Ginecologia/Obstetrícia
+            daySlots: {
+                1: [ // Monday
+                    { start: "15:00", end: "19:00" }
+                ],
+                3: [ // Wednesday
+                    { start: "09:00", end: "12:40" }
+                ]
+            }
+        }
+    }
+};
+
+let currentStep = 0;
+// Get the current language from the <html> tag
+const currentLang = document.documentElement.lang || 'pt-PT';
+const steps = document.querySelectorAll(".form-step");
+const form = document.getElementById("appointmentForm");
+const weekLabel = document.getElementById("weekLabel");
+const calendarTable = document.getElementById("calendarTable");
+const selectedSlotInput = document.getElementById("selectedSlot");
+const specialty = form.elements["specialty"];
+const location = form.elements["location"];
+
+let currentYear = new Date().getFullYear();
+let currentMonth = new Date().getMonth();
+let currentMonday = getMonday(new Date(currentYear, currentMonth, 1));
+
+function showStep(index) {
+    steps.forEach((step, i) => step.classList.toggle("active", i === index));
+}
+
+window.nextStep = function () {
+    const inputs = steps[currentStep].querySelectorAll("input, select");
+    for (let input of inputs) {
+        if (!input.checkValidity()) {
+            input.reportValidity();
+            return;
+        }
+    }
+    currentStep++;
+    showStep(currentStep);
+    renderCalendar(currentMonday);
+};
+
+window.prevStep = function () {
+    currentStep--;
+    showStep(currentStep);
+};
+
+function getMonday(d) {
+    d = new Date(d);
+    const day = d.getDay(),
+        diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(d.setDate(diff));
+}
+
+function timeToDate(baseDate, timeStr) {
+    const [h, m] = timeStr.split(":").map(Number);
+    const date = new Date(baseDate);
+    date.setHours(h, m, 0, 0);
+    return date;
+}
+
+// Generate time slots between start and end for a specific date and interval
+function generateTimeSlotsForDate(date, start, end, interval) {
+    const times = [];
+    let current = timeToDate(date, start);
+    const limit = timeToDate(date, end);
+    while (current <= limit) {
+        times.push(new Date(current));
+        current = new Date(current.getTime() + interval * 60000); // add interval in ms
+    }
+    return times;
+}
+
+function renderCalendar(startDate) {
+    selectedSlotInput.value = "";
+    const settings = availability[location.value]?.[specialty.selectedIndex];
+    const calendarWrap = document.querySelector(".calendar");
+
+    const firstOfMonth = new Date(currentYear, currentMonth, 1);
+    const monthYear = `${firstOfMonth.toLocaleString(currentLang, { month: 'long' })} ${firstOfMonth.getFullYear()}`;
+    weekLabel.innerHTML = `
         <div class="calendar-header">
             <button onclick="changeMonth(-1)">&lt;</button>
-            <strong>${t}</strong>
+            <strong>${monthYear}</strong>
             <button onclick="changeMonth(1)">&gt;</button>
         </div>
-    `,r&&r.daySlots){e.style.display="block";let n=[...Array(5)].map((e,t)=>{var n=new Date(a);return n.setDate(a.getDate()+t),n});var t=n.map(e=>`<th>${e.toLocaleDateString(currentLang,{weekday:"short",day:"numeric",month:"numeric"})}</th>`).join(""),o=generateTimeSlotsForDate(new Date,"09:00","19:00",20).map(e=>{let t=e.toTimeString().slice(0,5);return`<tr>${n.map(n=>{var e=n.getDay();let a=timeToDate(n,t);return`<td class="${(r.daySlots[e]||[]).some(e=>{var t=timeToDate(n,e.start),e=timeToDate(n,e.end);return a>=t&&a<=e})?"slot":"disabled-slot"}" data-slot="${n.toLocaleDateString()+" "+t}">${t}</td>`}).join("")}</tr>`});calendarTable.innerHTML=`
+    `;
+
+    if (!settings || !settings.daySlots) {
+        calendarWrap.style.display = "none";
+        calendarTable.innerHTML = "";
+        return;
+    } else {
+        calendarWrap.style.display = "block";
+    }
+
+    // 5 days from Monday to Friday
+    const days = [...Array(5)].map((_, i) => {
+        const date = new Date(startDate);
+        date.setDate(startDate.getDate() + i);
+        return date;
+    });
+
+    const headers = days.map(d => `<th>${d.toLocaleDateString(currentLang, { weekday: 'short', day: 'numeric', month: 'numeric' })}</th>`).join("");
+
+    // Global time range for rows: from 10:00 to 19:00, 20-minute intervals
+    const globalTimes = generateTimeSlotsForDate(new Date(), "09:00", "19:00", 20);
+
+    // Build each row per time, but for each column/day generate date-based time for comparison
+    const rows = globalTimes.map(globalTime => {
+        const timeStr = globalTime.toTimeString().slice(0, 5);
+        const rowCells = days.map(dayDate => {
+            const day = dayDate.getDay();
+            // Generate actual slot time for this cell day
+            const cellTime = timeToDate(dayDate, timeStr);
+
+            // Check if cellTime is in availability ranges for this day
+            const daySlots = settings.daySlots[day] || [];
+            const isAvailable = daySlots.some(slot => {
+                const start = timeToDate(dayDate, slot.start);
+                const end = timeToDate(dayDate, slot.end);
+                return cellTime >= start && cellTime <= end;
+            });
+
+            const label = `${dayDate.toLocaleDateString()} ${timeStr}`;
+            return `<td class="${isAvailable ? 'slot' : 'disabled-slot'}" data-slot="${label}">${timeStr}</td>`;
+        });
+
+        return `<tr>${rowCells.join("")}</tr>`;
+    });
+
+    calendarTable.innerHTML = `
         <table>
-            <thead><tr>${t}</tr></thead>
-            <tbody>${o.join("")}</tbody>
+            <thead><tr>${headers}</tr></thead>
+            <tbody>${rows.join("")}</tbody>
         </table>
-    `,document.querySelectorAll(".slot").forEach(e=>{e.addEventListener("click",()=>{document.querySelectorAll(".slot").forEach(e=>e.classList.remove("selected")),e.classList.add("selected"),selectedSlotInput.value=e.dataset.slot})})}else e.style.display="none",calendarTable.innerHTML=""}window.nextStep=function(){var e;for(e of steps[currentStep].querySelectorAll("input, select"))if(!e.checkValidity())return void e.reportValidity();showStep(++currentStep),renderCalendar(currentMonday)},window.prevStep=function(){showStep(--currentStep)},specialty.addEventListener("change",()=>renderCalendar(currentMonday)),location.addEventListener("change",()=>renderCalendar(currentMonday)),window.changeWeek=function(e){currentMonday.setDate(currentMonday.getDate()+7*e),currentYear=currentMonday.getFullYear(),currentMonth=currentMonday.getMonth(),renderCalendar(currentMonday)},window.changeMonth=function(e){var e=new Date(currentYear,currentMonth+e,1),t=e.getDay();6===t?e.setDate(e.getDate()+2):0===t&&e.setDate(e.getDate()+1),currentYear=e.getFullYear(),currentMonth=e.getMonth(),renderCalendar(currentMonday=getMonday(e))},form.addEventListener("submit",function(e){if(e.preventDefault(),!selectedSlotInput.value&&availability[form.elements.location.value]?.[form.elements.specialty.value])alert("Por favor selecione um horário.");else if(grecaptcha.getResponse()){let e={name:document.getElementById("name").value,email:document.getElementById("email").value,birthday:document.getElementById("birthday").value,contact:document.getElementById("contact").value,specialty:specialty.value,location:location.value,selectedSlot:selectedSlotInput.value||"Sem horário selecionado",notes:form.querySelector('[name="notes"]')?.value||""};emailjs.send("service_2mkemrj","template_yaezzgg",e).then(()=>{showStep(currentStep=0),emailjs.send("service_2mkemrj","template_ppny0sk",e).then(()=>{document.getElementById("statusMsg").textContent="Agendamento enviado com sucesso!",form.reset()}).catch(e=>{console.error("Erro no email do cliente:",e),document.getElementById("statusMsg").textContent="Erro ao enviar o e-mail de confirmação.",showStep(currentStep=0)})}).catch(e=>{console.error("Erro no email da clínica:",e),document.getElementById("statusMsg").textContent="Erro ao enviar. Tente novamente.",showStep(currentStep=0)})}else alert("Por favor confirma que não és um robô.")}),showStep(0);
+    `;
+
+    document.querySelectorAll(".slot").forEach(cell => {
+        cell.addEventListener("click", () => {
+            document.querySelectorAll(".slot").forEach(c => c.classList.remove("selected"));
+            cell.classList.add("selected");
+            selectedSlotInput.value = cell.dataset.slot;
+        });
+    });
+}
+
+specialty.addEventListener("change", () => renderCalendar(currentMonday));
+location.addEventListener("change", () => renderCalendar(currentMonday));
+
+window.changeWeek = function (offset) {
+    currentMonday.setDate(currentMonday.getDate() + offset * 7);
+
+    currentYear = currentMonday.getFullYear();
+    currentMonth = currentMonday.getMonth();
+
+    renderCalendar(currentMonday);
+};
+
+window.changeMonth = function (monthOffset) {
+    const newDate = new Date(currentYear, currentMonth + monthOffset, 1);
+    let firstDay = newDate.getDay();
+
+    if (firstDay === 6) {
+        newDate.setDate(newDate.getDate() + 2);
+    } else if (firstDay === 0) {
+        newDate.setDate(newDate.getDate() + 1);
+    }
+
+    currentYear = newDate.getFullYear();
+    currentMonth = newDate.getMonth();
+
+    currentMonday = getMonday(newDate);
+    renderCalendar(currentMonday);
+};
+
+form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (!selectedSlotInput.value && availability[form.elements["location"].value]?.[form.elements["specialty"].value]) {
+        alert("Por favor selecione um horário.");
+        return;
+    }
+
+    const response = grecaptcha.getResponse();
+    if (!response) {
+        alert("Por favor confirma que não és um robô.");
+        return;
+    }
+
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        birthday: document.getElementById('birthday').value,
+        contact: document.getElementById('contact').value,
+        specialty: specialty.value,
+        location: location.value,
+        selectedSlot: selectedSlotInput.value || "Sem horário selecionado",
+        notes: form.querySelector('[name="notes"]')?.value || ""
+    };
+
+    emailjs.send("service_2mkemrj", "template_yaezzgg", formData).then(() => {
+        currentStep = 0;
+        showStep(currentStep);
+        emailjs.send("service_2mkemrj", "template_ppny0sk", formData)
+            .then(() => {
+                document.getElementById("statusMsg").textContent = "Agendamento enviado com sucesso!";
+                form.reset();
+            })
+            .catch(error => {
+                console.error("Erro no email do cliente:", error);
+                document.getElementById("statusMsg").textContent = "Erro ao enviar o e-mail de confirmação.";
+                currentStep = 0;
+                showStep(currentStep);
+            });
+    }).catch(error => {
+        console.error("Erro no email da clínica:", error);
+        document.getElementById("statusMsg").textContent = "Erro ao enviar. Tente novamente.";
+        currentStep = 0;
+        showStep(currentStep);
+    });
+});
+
+showStep(0);
