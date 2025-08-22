@@ -590,8 +590,17 @@ h1 a .second {
     /* https://unsplash.com/photos/p76UivR30oo */
 }
 
+.img-container3 {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    background: center / cover no-repeat url(../images/emergency.jpg);
+    /* https: //www.pexels.com/photo/photo-of-gynecologist-sitting-near-medical-equipment-7088498/ */
+}
+
 .img-container::after,
-.img-container2::after {
+.img-container2::after,
+.img-container3::after {
     display: inline-block;
     position: absolute;
     content: "";
@@ -660,6 +669,33 @@ h1 a .second {
     display: none;
 }
 
+.teaser3 {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 25%;
+    transform: translateX(-50%);
+    left: 55%;
+    background: -webkit-linear-gradient(#007EA7, #00171F);
+    background-clip: unset;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.teaser3 .first {
+    display: block;
+    font-size: 2.5rem;
+    line-height: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+.teaser3 .second {
+    display: block;
+    font-size: 1.5rem;
+}
 
 .scroll-down {
     position: absolute;
@@ -1000,6 +1036,7 @@ h1 a .second {
     border-radius: 50%;
     margin-bottom: 15px;
     width: 100%;
+    aspect-ratio: 1 / 1;
     object-fit: cover;
 }
 
@@ -2302,6 +2339,10 @@ h1 a .second {
         /* https: //www.pexels.com/photo/woman-wearing-headphones-having-videocall-on-laptop-7195123/ */
     }
 
+    .img-container3 {
+        height: 100%;
+    }
+
     .teaser {
         top: 50%;
         left: -25%;
@@ -2311,25 +2352,45 @@ h1 a .second {
     }
 
     .teaser2 {
-        top: 50%;
+        top: 40%;
         left: -15%;
         transform: translateY(50%);
-        /* padding: 0px 0px 0px 60px; */
         width: inherit;
     }
 
     .teaser2 .first {
-        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+        text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.25);
         display: block;
         font-size: 2.5rem;
         margin-bottom: 0.5rem;
     }
 
     .teaser2 .second {
-        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+        text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.25);
         display: block;
         font-size: 1.25rem;
         margin-bottom: 1rem;
+    }
+
+    .teaser3 {
+        max-width: 40%;
+        top: 0%;
+        left: 50%;
+        transform: translateY(50%);
+        width: inherit;
+    }
+
+    .teaser3 .first {
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+        display: block;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .teaser3 .second {
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+        display: block;
+        font-size: 1.5rem;
     }
 
     .scroll-down {
@@ -2405,6 +2466,36 @@ h1 a .second {
         text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.5);
         display: block;
         font-size: 1.5rem;
+    }
+
+    .teaser3 {
+        background: -webkit-linear-gradient(#7ba8b7, #a4d4e4);
+        padding: 20px;
+        max-width: 40%;
+        border-radius: 16px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 60%;
+        transform: translateX(-50%);
+        left: 70%;
+        box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+        color: white;
+    }
+
+    .teaser3 .first {
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 1);
+        display: block;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .teaser3 .second {
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+        display: block;
+        font-size: 1.25rem;
     }
 
     .main_control {

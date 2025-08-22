@@ -167,7 +167,7 @@ function slide(wrapper, items, prev, next) {
     });
 
     if (main_slider) {
-        setInterval(() => shiftSlide(1), 5000);
+        setInterval(() => shiftSlide(1), 7500);
     }
 }
 
