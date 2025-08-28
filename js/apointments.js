@@ -235,18 +235,36 @@ form.addEventListener("submit", function (e) {
         showStep(currentStep);
         emailjs.send("service_2mkemrj", "template_ppny0sk", formData)
             .then(() => {
-                document.getElementById("statusMsg").textContent = "Agendamento enviado com sucesso!";
+                if (document.documentElement.lang == "en") {
+                    document.getElementById("statusMsg").textContent = "Appointment request successfully submitted! Pending confirmation.";
+                } else if (document.documentElement.lang == "es") {
+                    document.getElementById("statusMsg").textContent = "¡Solicitud de cita enviada correctamente! Pendiente de confirmación.";
+                } else {
+                    document.getElementById("statusMsg").textContent = "Pedido de agendamento enviado com sucesso! Pendente de confirmação.";
+                }
                 form.reset();
             })
             .catch(error => {
                 console.error("Erro no email do cliente:", error);
-                document.getElementById("statusMsg").textContent = "Erro ao enviar o e-mail de confirmação.";
+                if (document.documentElement.lang == "en") {
+                    document.getElementById("statusMsg").textContent = "Error sending confirmation email. Please try again.";
+                } else if (document.documentElement.lang == "es") {
+                    document.getElementById("statusMsg").textContent = "Error al enviar el correo electrónico de confirmación. Por favor, inténtalo de nuevo.";
+                } else {
+                    document.getElementById("statusMsg").textContent = "Erro ao enviar o e-mail de confirmação. Por favor tente novamente.";
+                }
                 currentStep = 0;
                 showStep(currentStep);
             });
     }).catch(error => {
         console.error("Erro no email da clínica:", error);
-        document.getElementById("statusMsg").textContent = "Erro ao enviar. Tente novamente.";
+        if (document.documentElement.lang == "en") {
+            document.getElementById("statusMsg").textContent = "Error sending email. Please try again.";
+        } else if (document.documentElement.lang == "es") {
+            document.getElementById("statusMsg").textContent = "Error al enviar el correo electrónico. Por favor, inténtalo de nuevo.";
+        } else {
+            document.getElementById("statusMsg").textContent = "Erro ao enviar o e-mail. Por favor tente novamente.";
+        }
         currentStep = 0;
         showStep(currentStep);
     });
