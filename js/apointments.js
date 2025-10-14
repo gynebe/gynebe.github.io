@@ -53,7 +53,7 @@ const location = form.elements["location"];
 
 let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth();
-let currentMonday = getMonday(new Date(currentYear, currentMonth, 1));
+let currentMonday = getMonday(new Date());
 
 function showStep(index) {
     steps.forEach((step, i) => step.classList.toggle("active", i === index));
@@ -133,7 +133,15 @@ function renderCalendar(startDate) {
         return date;
     });
 
-    const headers = days.map(d => `<th>${d.toLocaleDateString(currentLang, { weekday: 'short', day: 'numeric', month: 'numeric' })}</th>`).join("");
+    const tomorrow = new Date();
+    tomorrow.setHours(0, 0, 0, 0);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const headers = days.map(d => {
+        const isPast = d < tomorrow;
+        const label = d.toLocaleDateString(currentLang, { weekday: 'short', day: 'numeric', month: 'numeric' });
+        return `<th class="${isPast ? 'disabled-slot' : ''}">${label}</th>`;
+    }).join("");
 
     // Global time range for rows: from 10:00 to 19:00, 20-minute intervals
     const globalTimes = generateTimeSlotsForDate(new Date(), "09:00", "19:00", 20);
@@ -148,10 +156,16 @@ function renderCalendar(startDate) {
 
             // Check if cellTime is in availability ranges for this day
             const daySlots = settings.daySlots[day] || [];
+
+            // Compute tomorrow’s midnight (00:00)
+            const tomorrow = new Date();
+            tomorrow.setHours(0, 0, 0, 0);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
             const isAvailable = daySlots.some(slot => {
                 const start = timeToDate(dayDate, slot.start);
                 const end = timeToDate(dayDate, slot.end);
-                return cellTime >= start && cellTime <= end;
+                return cellTime >= start && cellTime <= end && cellTime >= tomorrow;
             });
 
             const label = `${dayDate.toLocaleDateString()} ${timeStr}`;
