@@ -40,6 +40,8 @@ const availability = {
     }
 };
 
+const version = process.env.VERSION;
+let calendarRules = { blockedDates: [], holidaysMessage: '' };
 let currentStep = 0;
 // Get the current language from the <html> tag
 const currentLang = document.documentElement.lang || 'pt-PT';
@@ -54,6 +56,19 @@ const location = form.elements["location"];
 let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth();
 let currentMonday = getMonday(new Date());
+
+async function loadCalendarRules() {
+    try {
+        const res = await fetch(`/calendar-rules.json?v=${version}`, { cache: 'no-store' });
+        if (res.ok) {
+            calendarRules = await res.json();
+        } else {
+            console.error('Failed to load calendar rules:', res.status);
+        }
+    } catch (e) {
+        console.error('Erro ao carregar regras do calendário', e);
+    }
+}
 
 function showStep(index) {
     steps.forEach((step, i) => step.classList.toggle("active", i === index));
@@ -162,14 +177,21 @@ function renderCalendar(startDate) {
             tomorrow.setHours(0, 0, 0, 0);
             tomorrow.setDate(tomorrow.getDate() + 1);
 
+            const blockedDatesForSpecialty = calendarRules.holidays?.[specialty.selectedIndex] || [];
+            const isBlocked = blockedDatesForSpecialty.includes(dayDate.toISOString().split('T')[0]);
+
+
             const isAvailable = daySlots.some(slot => {
                 const start = timeToDate(dayDate, slot.start);
                 const end = timeToDate(dayDate, slot.end);
                 return cellTime >= start && cellTime <= end && cellTime >= tomorrow;
-            });
+            }) && !isBlocked;
 
             const label = `${dayDate.toLocaleDateString()} ${timeStr}`;
-            return `<td class="${isAvailable ? 'slot' : 'disabled-slot'}" data-slot="${label}">${timeStr}</td>`;
+            return `<td class="${isAvailable ? 'slot' : 'disabled-slot'}" 
+                    data-slot="${label}" 
+                    ${isBlocked ? `title="${calendarRules.holidaysMessage}"` : ''}>
+                    ${timeStr} </td>`;
         });
 
         return `<tr>${rowCells.join("")}</tr>`;
@@ -191,8 +213,8 @@ function renderCalendar(startDate) {
     });
 }
 
-specialty.addEventListener("change", () => renderCalendar(currentMonday));
-location.addEventListener("change", () => renderCalendar(currentMonday));
+specialty.addEventListener("change", () => loadCalendarRules().then(() => renderCalendar(currentMonday)));
+location.addEventListener("change", () => loadCalendarRules().then(() => renderCalendar(currentMonday)));
 
 window.changeWeek = function (offset) {
     currentMonday.setDate(currentMonday.getDate() + offset * 7);
