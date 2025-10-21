@@ -1899,6 +1899,12 @@ h1 a .second {
     box-sizing: border-box;
 }
 
+#appointmentForm .booked-slot {
+    background-color: #f8d7da;
+    color: #721c24;
+    cursor: not-allowed;
+}
+
 .g-recaptcha {
     margin: 2.5rem auto 0;
 }
@@ -2686,10 +2692,12 @@ h1 a .second {
         justify-content: center;
         opacity: 0;
         box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+        z-index: -100;
     }
 
     .dropdownBackground.open {
         opacity: 1;
+        z-index: 0;
     }
 
     .arrow {
