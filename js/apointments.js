@@ -42,7 +42,9 @@ const availability = {
 
 const version = process.env.VERSION;
 let calendarRules = { blockedDates: [], holidaysMessage: '' };
+let appointments = [];
 let currentStep = 0;
+
 // Get the current language from the <html> tag
 const currentLang = document.documentElement.lang || 'pt-PT';
 const steps = document.querySelectorAll(".form-step");
@@ -57,6 +59,8 @@ let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth();
 let currentMonday = getMonday(new Date());
 
+// ---------------------- LOADERS ----------------------
+
 async function loadCalendarRules() {
     try {
         const res = await fetch(`/calendar-rules.json?v=${version}`, { cache: 'no-store' });
@@ -69,6 +73,21 @@ async function loadCalendarRules() {
         console.error('Erro ao carregar regras do calendário', e);
     }
 }
+
+async function loadAppointments() {
+    try {
+        const res = await fetch(`/appointments.json?v=${version}`, { cache: 'no-store' });
+        if (res.ok) {
+            appointments = await res.json();
+        } else {
+            console.error('Failed to load appointments:', res.status);
+        }
+    } catch (e) {
+        console.error('Erro ao carregar appointments.json', e);
+    }
+}
+
+// ---------------------- CALENDAR RENDERING ----------------------
 
 function showStep(index) {
     steps.forEach((step, i) => step.classList.toggle("active", i === index));
@@ -141,7 +160,24 @@ function renderCalendar(startDate) {
         calendarWrap.style.display = "block";
     }
 
-    // 5 days from Monday to Friday
+    // Identify gabineteId based on location + specialty
+    let gabineteId = null;
+    if (location.value === "Porto") {
+        if (specialty.selectedIndex === 1) gabineteId = 1;
+        else if (specialty.selectedIndex === 2) gabineteId = 2;
+    } else if (location.value === "Santo Tirso") {
+        if (specialty.selectedIndex === 1) gabineteId = 4;
+    }
+
+    // --- Get booked slots (keep all for this gabinete) ---
+    const bookedSlots = appointments
+        .filter(a => a.IdGabinete === gabineteId)
+        .map(a => ({
+            start: new Date(a.DataInicio),
+            end: new Date(a.DataFim)
+        }));
+
+    // --- Generate calendar days (Mon–Fri) ---
     const days = [...Array(5)].map((_, i) => {
         const date = new Date(startDate);
         date.setDate(startDate.getDate() + i);
@@ -158,42 +194,52 @@ function renderCalendar(startDate) {
         return `<th class="${isPast ? 'disabled-slot' : ''}">${label}</th>`;
     }).join("");
 
-    // Global time range for rows: from 10:00 to 19:00, 20-minute intervals
-    const globalTimes = generateTimeSlotsForDate(new Date(), "09:00", "19:00", 20);
+    // Generate all time rows (09:00–19:00)
+    // Default interval: 20 min, except for Pediatria (index 2) = 30 min
+    const interval =
+        specialty.selectedIndex === 2 ? 30 : 20;
+    const globalTimes = generateTimeSlotsForDate(new Date(), "09:00", "19:00", interval);
 
-    // Build each row per time, but for each column/day generate date-based time for comparison
     const rows = globalTimes.map(globalTime => {
         const timeStr = globalTime.toTimeString().slice(0, 5);
         const rowCells = days.map(dayDate => {
             const day = dayDate.getDay();
-            // Generate actual slot time for this cell day
             const cellTime = timeToDate(dayDate, timeStr);
-
-            // Check if cellTime is in availability ranges for this day
             const daySlots = settings.daySlots[day] || [];
-
-            // Compute tomorrow’s midnight (00:00)
-            const tomorrow = new Date();
-            tomorrow.setHours(0, 0, 0, 0);
-            tomorrow.setDate(tomorrow.getDate() + 1);
 
             const blockedDatesForSpecialty = calendarRules.holidays?.[specialty.selectedIndex] || [];
             const isBlocked = blockedDatesForSpecialty.includes(dayDate.toISOString().split('T')[0]);
 
-
-            const isAvailable = daySlots.some(slot => {
+            // --- Only render slots within availability ---
+            const isWithinAvailability = daySlots.some(slot => {
                 const start = timeToDate(dayDate, slot.start);
                 const end = timeToDate(dayDate, slot.end);
-                return cellTime >= start && cellTime <= end && cellTime >= tomorrow;
-            }) && !isBlocked;
+                return cellTime >= start && cellTime < end && cellTime >= tomorrow;
+            });
 
+            // --- Mark as booked if it overlaps a booked slot ---
+            const isBooked = isWithinAvailability && bookedSlots.some(b => cellTime >= b.start && cellTime < b.end);
+
+            const isAvailable = isWithinAvailability && !isBlocked && !isBooked;
             const label = `${dayDate.toLocaleDateString()} ${timeStr}`;
-            return `<td class="${isAvailable ? 'slot' : 'disabled-slot'}" 
-                    data-slot="${label}" 
-                    ${isBlocked ? `title="${calendarRules.holidaysMessage}"` : ''}>
-                    ${timeStr} </td>`;
-        });
 
+            let cssClass = "disabled-slot";
+            let tooltip = "";
+            if (isAvailable) {
+                cssClass = "slot";
+            } else if (isBooked) {
+                cssClass = "booked-slot";
+                tooltip = "Horário já ocupado";
+            } else if (isBlocked) {
+                tooltip = calendarRules.holidaysMessage;
+            }
+
+            return `<td class="${cssClass}" 
+                        data-slot="${label}" 
+                        ${tooltip ? `title="${tooltip}"` : ""}>
+                        ${timeStr}
+                    </td>`;
+        });
         return `<tr>${rowCells.join("")}</tr>`;
     });
 
@@ -213,34 +259,31 @@ function renderCalendar(startDate) {
     });
 }
 
-specialty.addEventListener("change", () => loadCalendarRules().then(() => renderCalendar(currentMonday)));
-location.addEventListener("change", () => loadCalendarRules().then(() => renderCalendar(currentMonday)));
 
-window.changeWeek = function (offset) {
+// ---------------------- EVENTS ----------------------
+
+specialty.addEventListener("change", () => Promise.all([loadCalendarRules(), loadAppointments()]).then(() => renderCalendar(currentMonday)));
+location.addEventListener("change", () => Promise.all([loadCalendarRules(), loadAppointments()]).then(() => renderCalendar(currentMonday)));
+
+window.changeWeek = async function (offset) {
     currentMonday.setDate(currentMonday.getDate() + offset * 7);
-
     currentYear = currentMonday.getFullYear();
     currentMonth = currentMonday.getMonth();
-
     renderCalendar(currentMonday);
 };
 
 window.changeMonth = function (monthOffset) {
     const newDate = new Date(currentYear, currentMonth + monthOffset, 1);
     let firstDay = newDate.getDay();
-
-    if (firstDay === 6) {
-        newDate.setDate(newDate.getDate() + 2);
-    } else if (firstDay === 0) {
-        newDate.setDate(newDate.getDate() + 1);
-    }
-
+    if (firstDay === 6) newDate.setDate(newDate.getDate() + 2);
+    else if (firstDay === 0) newDate.setDate(newDate.getDate() + 1);
     currentYear = newDate.getFullYear();
     currentMonth = newDate.getMonth();
-
     currentMonday = getMonday(newDate);
     renderCalendar(currentMonday);
 };
+
+// ---------------------- FORM SUBMISSION ----------------------
 
 form.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -271,39 +314,36 @@ form.addEventListener("submit", function (e) {
         showStep(currentStep);
         emailjs.send("service_2mkemrj", "template_ppny0sk", formData)
             .then(() => {
-                if (document.documentElement.lang == "en") {
-                    document.getElementById("statusMsg").textContent = "Appointment request successfully submitted! Pending confirmation.";
-                } else if (document.documentElement.lang == "es") {
-                    document.getElementById("statusMsg").textContent = "¡Solicitud de cita enviada correctamente! Pendiente de confirmación.";
-                } else {
-                    document.getElementById("statusMsg").textContent = "Pedido de agendamento enviado com sucesso! Pendente de confirmação.";
-                }
+                const statusMsg = document.getElementById("statusMsg");
+                if (currentLang === "en") statusMsg.textContent = "Appointment request successfully submitted! Pending confirmation.";
+                else if (currentLang === "es") statusMsg.textContent = "¡Solicitud de cita enviada correctamente! Pendiente de confirmación.";
+                else statusMsg.textContent = "Pedido de agendamento enviado com sucesso! Pendente de confirmação.";
                 form.reset();
             })
             .catch(error => {
                 console.error("Erro no email do cliente:", error);
-                if (document.documentElement.lang == "en") {
-                    document.getElementById("statusMsg").textContent = "Error sending confirmation email. Please try again.";
-                } else if (document.documentElement.lang == "es") {
-                    document.getElementById("statusMsg").textContent = "Error al enviar el correo electrónico de confirmación. Por favor, inténtalo de nuevo.";
-                } else {
-                    document.getElementById("statusMsg").textContent = "Erro ao enviar o e-mail de confirmação. Por favor tente novamente.";
-                }
+                const statusMsg = document.getElementById("statusMsg");
+                if (currentLang === "en") statusMsg.textContent = "Error sending confirmation email. Please try again.";
+                else if (currentLang === "es") statusMsg.textContent = "Error al enviar el correo electrónico de confirmación. Por favor, inténtalo de nuevo.";
+                else statusMsg.textContent = "Erro ao enviar o e-mail de confirmação. Por favor tente novamente.";
                 currentStep = 0;
                 showStep(currentStep);
             });
     }).catch(error => {
         console.error("Erro no email da clínica:", error);
-        if (document.documentElement.lang == "en") {
-            document.getElementById("statusMsg").textContent = "Error sending email. Please try again.";
-        } else if (document.documentElement.lang == "es") {
-            document.getElementById("statusMsg").textContent = "Error al enviar el correo electrónico. Por favor, inténtalo de nuevo.";
-        } else {
-            document.getElementById("statusMsg").textContent = "Erro ao enviar o e-mail. Por favor tente novamente.";
-        }
+        const statusMsg = document.getElementById("statusMsg");
+        if (currentLang === "en") statusMsg.textContent = "Error sending email. Please try again.";
+        else if (currentLang === "es") statusMsg.textContent = "Error al enviar el correo electrónico. Por favor, inténtalo de nuevo.";
+        else statusMsg.textContent = "Erro ao enviar o e-mail. Por favor tente novamente.";
         currentStep = 0;
         showStep(currentStep);
     });
 });
 
-showStep(0);
+// ---------------------- INIT ----------------------
+
+(async () => {
+    await loadCalendarRules();
+    await loadAppointments();
+    showStep(0);
+})();
