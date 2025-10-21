@@ -190,6 +190,11 @@
     "IdGabinete": 4
   },
   {
+    "DataInicio": "2025-11-04T10:20:00.000Z",
+    "DataFim": "2025-11-04T10:40:00.000Z",
+    "IdGabinete": 1
+  },
+  {
     "DataInicio": "2025-11-04T10:40:00.000Z",
     "DataFim": "2025-11-04T11:00:00.000Z",
     "IdGabinete": 1
