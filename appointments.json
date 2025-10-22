@@ -810,6 +810,11 @@
     "IdGabinete": 1
   },
   {
+    "DataInicio": "2025-11-18T16:40:00.000Z",
+    "DataFim": "2025-11-18T17:00:00.000Z",
+    "IdGabinete": 1
+  },
+  {
     "DataInicio": "2025-11-18T17:00:00.000Z",
     "DataFim": "2025-11-18T17:30:00.000Z",
     "IdGabinete": 2
