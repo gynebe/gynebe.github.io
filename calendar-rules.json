@@ -102,18 +102,8 @@
         ]
     },
     "openExceptions": {
-        "1": [
-            {
-                "DataInicio": "2025-12-25T00:00:00.000Z",
-                "DataFim": "2025-12-25T23:59:00.000Z"
-            }
-        ],
-        "2": [
-            {
-                "DataInicio": "2025-12-25T00:00:00.000Z",
-                "DataFim": "2025-12-25T23:59:00.000Z"
-            }
-        ]
+        "1": [],
+        "2": []
     },
     "holidaysMessage": "Encontramo-nos em férias!"
 }
