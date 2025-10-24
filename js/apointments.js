@@ -45,7 +45,6 @@ let calendarRules = { blockedDates: [], holidaysMessage: '' };
 let appointments = [];
 let currentStep = 0;
 
-// Get the current language from the <html> tag
 const currentLang = document.documentElement.lang || 'pt-PT';
 const steps = document.querySelectorAll(".form-step");
 const form = document.getElementById("appointmentForm");
@@ -87,6 +86,40 @@ async function loadAppointments() {
     }
 }
 
+// ---------------------- TIME HELPERS ----------------------
+
+// Parse UTC string as a Date object without timezone shift
+function parseUTC(dateStr) {
+    return new Date(dateStr); // Date object automatically interprets Z as UTC
+}
+
+// Convert a base date + "HH:MM" string to UTC Date
+function timeToUTCDate(baseDate, timeStr) {
+    const [h, m] = timeStr.split(":").map(Number);
+    const date = new Date(Date.UTC(baseDate.getUTCFullYear(), baseDate.getUTCMonth(), baseDate.getUTCDate(), h, m, 0));
+    return date;
+}
+
+// Generate time slots between start and end in UTC
+function generateTimeSlotsForDateUTC(date, start, end, interval) {
+    const times = [];
+    let current = timeToUTCDate(date, start);
+    const limit = timeToUTCDate(date, end);
+    while (current < limit) {
+        times.push(new Date(current));
+        current = new Date(current.getTime() + interval * 60000);
+    }
+    return times;
+}
+
+// Get Monday of a given date (UTC)
+function getMonday(d) {
+    d = new Date(d);
+    const day = d.getUTCDay(),
+        diff = d.getUTCDate() - day + (day === 0 ? -6 : 1);
+    return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), diff));
+}
+
 // ---------------------- CALENDAR RENDERING ----------------------
 
 function showStep(index) {
@@ -111,39 +144,13 @@ window.prevStep = function () {
     showStep(currentStep);
 };
 
-function getMonday(d) {
-    d = new Date(d);
-    const day = d.getDay(),
-        diff = d.getDate() - day + (day === 0 ? -6 : 1);
-    return new Date(d.setDate(diff));
-}
-
-function timeToDate(baseDate, timeStr) {
-    const [h, m] = timeStr.split(":").map(Number);
-    const date = new Date(baseDate);
-    date.setHours(h, m, 0, 0);
-    return date;
-}
-
-// Generate time slots between start and end for a specific date and interval
-function generateTimeSlotsForDate(date, start, end, interval) {
-    const times = [];
-    let current = timeToDate(date, start);
-    const limit = timeToDate(date, end);
-    while (current <= limit) {
-        times.push(new Date(current));
-        current = new Date(current.getTime() + interval * 60000); // add interval in ms
-    }
-    return times;
-}
-
 function renderCalendar(startDate) {
     selectedSlotInput.value = "";
     const settings = availability[location.value]?.[specialty.selectedIndex];
     const calendarWrap = document.querySelector(".calendar");
 
-    const firstOfMonth = new Date(currentYear, currentMonth, 1);
-    const monthYear = `${firstOfMonth.toLocaleString(currentLang, { month: 'long' })} ${firstOfMonth.getFullYear()}`;
+    const firstOfMonth = new Date(Date.UTC(currentYear, currentMonth, 1));
+    const monthYear = `${firstOfMonth.toLocaleString(currentLang, { month: 'long' })} ${firstOfMonth.getUTCFullYear()}`;
     weekLabel.innerHTML = `
         <div class="calendar-header">
             <button onclick="changeMonth(-1)">&lt;</button>
@@ -160,7 +167,6 @@ function renderCalendar(startDate) {
         calendarWrap.style.display = "block";
     }
 
-    // Identify gabineteId based on location + specialty
     let gabineteId = null;
     if (location.value === "Porto") {
         if (specialty.selectedIndex === 1) gabineteId = 1;
@@ -169,76 +175,74 @@ function renderCalendar(startDate) {
         if (specialty.selectedIndex === 1) gabineteId = 4;
     }
 
-    // --- Get booked slots (keep all for this gabinete) ---
+    // --- Get booked slots ---
     const bookedSlots = appointments
         .filter(a => a.IdGabinete === gabineteId)
         .map(a => ({
-            start: new Date(a.DataInicio),
-            end: new Date(a.DataFim)
+            start: parseUTC(a.DataInicio),
+            end: parseUTC(a.DataFim)
         }));
 
-    // --- Generate calendar days (Mon–Fri) ---
+    // --- Generate days Mon–Fri ---
     const days = [...Array(5)].map((_, i) => {
         const date = new Date(startDate);
-        date.setDate(startDate.getDate() + i);
+        date.setUTCDate(startDate.getUTCDate() + i);
         return date;
     });
 
-    const tomorrow = new Date();
-    tomorrow.setHours(0, 0, 0, 0);
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    const nowUTC = new Date();
+    nowUTC.setUTCHours(0, 0, 0, 0);
+    const tomorrowUTC = new Date(nowUTC.getTime() + 24 * 60 * 60 * 1000);
 
     const headers = days.map(d => {
-        const isPast = d < tomorrow;
+        const isPast = d < tomorrowUTC;
         const label = d.toLocaleDateString(currentLang, { weekday: 'short', day: 'numeric', month: 'numeric' });
         return `<th class="${isPast ? 'disabled-slot' : ''}">${label}</th>`;
     }).join("");
 
-    // Generate all time rows (09:00–19:00)
-    // Default interval: 20 min, except for Pediatria (index 2) = 30 min
-    const interval =
-        specialty.selectedIndex === 2 ? 30 : 20;
-    const globalTimes = generateTimeSlotsForDate(new Date(), "09:00", "19:00", interval);
+    const interval = specialty.selectedIndex === 2 ? 30 : 20;
+    const globalTimes = generateTimeSlotsForDateUTC(new Date(), "09:00", "19:00", interval);
 
-    const rows = globalTimes.map(globalTime => {
-        const timeStr = globalTime.toTimeString().slice(0, 5);
+    const rows = globalTimes.map(globalTimeUTC => {
+        const timeStr = globalTimeUTC.toISOString().substr(11, 5); // HH:MM UTC
         const rowCells = days.map(dayDate => {
-            const day = dayDate.getDay();
-            const cellTime = timeToDate(dayDate, timeStr);
+            const day = dayDate.getUTCDay();
+            const cellTime = new Date(Date.UTC(dayDate.getUTCFullYear(), dayDate.getUTCMonth(), dayDate.getUTCDate(), globalTimeUTC.getUTCHours(), globalTimeUTC.getUTCMinutes()));
+
             const daySlots = settings.daySlots[day] || [];
-
-            const blockedDatesForSpecialty = calendarRules.holidays?.[specialty.selectedIndex] || [];
-            const isBlocked = blockedDatesForSpecialty.includes(dayDate.toISOString().split('T')[0]);
-
-            // --- Only render slots within availability ---
             const isWithinAvailability = daySlots.some(slot => {
-                const start = timeToDate(dayDate, slot.start);
-                const end = timeToDate(dayDate, slot.end);
-                return cellTime >= start && cellTime < end && cellTime >= tomorrow;
+                const start = timeToUTCDate(dayDate, slot.start);
+                const end = timeToUTCDate(dayDate, slot.end);
+                return cellTime >= start && cellTime < end && cellTime >= tomorrowUTC;
             });
 
-            // --- Mark as booked if it overlaps a booked slot ---
-            const isBooked = isWithinAvailability && bookedSlots.some(b => cellTime >= b.start && cellTime < b.end);
+            // --- Check blocked / open exceptions ---
+            const blockedDates = calendarRules.holidays?.[specialty.selectedIndex] || [];
+            const openDates = calendarRules.openExceptions?.[specialty.selectedIndex] || [];
 
-            const isAvailable = isWithinAvailability && !isBlocked && !isBooked;
+            const isBlocked = blockedDates.some(d => cellTime >= parseUTC(d.DataInicio) && cellTime < parseUTC(d.DataFim));
+            const isOpen = openDates.some(d => cellTime >= parseUTC(d.DataInicio) && cellTime < parseUTC(d.DataFim));
+
+            // --- Check booked slots (only consider available or open slots) ---
+            const isBooked = bookedSlots.some(b => cellTime >= b.start && cellTime < b.end && (isWithinAvailability || isOpen));
+
+            const isAvailable = ((isWithinAvailability || isOpen) && !isBooked && !isBlocked) || isOpen;
+
             const label = `${dayDate.toLocaleDateString()} ${timeStr}`;
 
             let cssClass = "disabled-slot";
             let tooltip = "";
-            if (isAvailable) {
-                cssClass = "slot";
-            } else if (isBooked) {
+            if (isAvailable) cssClass = "slot";
+            else if (isBooked) {
                 cssClass = "booked-slot";
                 tooltip = "Horário já ocupado";
-            } else if (isBlocked) {
+            } else if (isBlocked && !isOpen) {
                 tooltip = calendarRules.holidaysMessage;
+            } else if (isOpen) {
+                tooltip = "Aberto excecionalmente";
             }
 
-            return `<td class="${cssClass}" 
-                        data-slot="${label}" 
-                        ${tooltip ? `title="${tooltip}"` : ""}>
-                        ${timeStr}
-                    </td>`;
+            return `<td class="${cssClass}" data-slot="${label}" ${tooltip ? `title="${tooltip}"` : ""}>${timeStr}</td>`;
         });
         return `<tr>${rowCells.join("")}</tr>`;
     });
@@ -259,26 +263,25 @@ function renderCalendar(startDate) {
     });
 }
 
-
 // ---------------------- EVENTS ----------------------
 
 specialty.addEventListener("change", () => Promise.all([loadCalendarRules(), loadAppointments()]).then(() => renderCalendar(currentMonday)));
 location.addEventListener("change", () => Promise.all([loadCalendarRules(), loadAppointments()]).then(() => renderCalendar(currentMonday)));
 
 window.changeWeek = async function (offset) {
-    currentMonday.setDate(currentMonday.getDate() + offset * 7);
-    currentYear = currentMonday.getFullYear();
-    currentMonth = currentMonday.getMonth();
+    currentMonday.setUTCDate(currentMonday.getUTCDate() + offset * 7);
+    currentYear = currentMonday.getUTCFullYear();
+    currentMonth = currentMonday.getUTCMonth();
     renderCalendar(currentMonday);
 };
 
 window.changeMonth = function (monthOffset) {
-    const newDate = new Date(currentYear, currentMonth + monthOffset, 1);
-    let firstDay = newDate.getDay();
-    if (firstDay === 6) newDate.setDate(newDate.getDate() + 2);
-    else if (firstDay === 0) newDate.setDate(newDate.getDate() + 1);
-    currentYear = newDate.getFullYear();
-    currentMonth = newDate.getMonth();
+    const newDate = new Date(Date.UTC(currentYear, currentMonth + monthOffset, 1));
+    let firstDay = newDate.getUTCDay();
+    if (firstDay === 6) newDate.setUTCDate(newDate.getUTCDate() + 2);
+    else if (firstDay === 0) newDate.setUTCDate(newDate.getUTCDate() + 1);
+    currentYear = newDate.getUTCFullYear();
+    currentMonth = newDate.getUTCMonth();
     currentMonday = getMonday(newDate);
     renderCalendar(currentMonday);
 };
