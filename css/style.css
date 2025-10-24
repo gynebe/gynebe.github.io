@@ -598,12 +598,10 @@ h1 a .second {
     /* https: //www.pexels.com/photo/photo-of-gynecologist-sitting-near-medical-equipment-7088498/ */
 }
 
-.img-container::after,
-.img-container2::after,
-.img-container3::after {
+
+.img-containerFront {
     display: inline-block;
     position: absolute;
-    content: "";
     width: 100%;
     height: 100%;
     background: linear-gradient(90deg, #4dd7fd 0%, #02a1cb 100%);
@@ -673,16 +671,13 @@ h1 a .second {
     width: 70%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     position: absolute;
     top: 25%;
     transform: translateX(-50%);
-    left: 55%;
-    background: -webkit-linear-gradient(#007EA7, #00171F);
-    background-clip: unset;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    left: 50%;
+    gap: 2rem;
 }
 
 .teaser3 .first {
@@ -690,11 +685,60 @@ h1 a .second {
     font-size: 2.5rem;
     line-height: 3rem;
     margin-bottom: 1.5rem;
+    background: -webkit-linear-gradient(#007EA7, #00171F);
+    background-clip: unset;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .teaser3 .second {
     display: block;
     font-size: 1.5rem;
+    background: -webkit-linear-gradient(#007EA7, #00171F);
+    background-clip: unset;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.teaser3 a {
+    width: 75%;
+}
+
+.teaser3 .third {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    color: white;
+    border-color: #318f01;
+    border-width: 2px;
+    box-shadow: black 2px 2px 3px;
+    font: 700 1.5rem "Roboto Slab", sans-serif;
+    border-radius: 16px;
+    transition: all ease-in-out 0.5s;
+    background: linear-gradient(45deg, #46cd02, #3db302);
+    animation: pulse 2s infinite;
+    position: relative;
+    z-index: 10;
+    cursor: pointer;
+    transform: scale(1);
+}
+
+.teaser3 .third:hover {
+    transform: scale(1.05);
+}
+
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(70, 205, 2, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 15px rgba(70, 205, 2, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(70, 205, 2, 0);
+    }
 }
 
 .scroll-down {
@@ -798,7 +842,6 @@ h1 a .second {
     flex-shrink: 0;
     display: flex;
     justify-content: center;
-    cursor: pointer;
     transition: all 1s;
 }
 
@@ -1866,7 +1909,7 @@ h1 a .second {
     padding: 1rem 2rem;
     color: white;
     border-radius: 16px;
-    align-items: center;
+    align-items: top;
 }
 
 #appointmentForm .apointmentNote i {
@@ -2351,7 +2394,7 @@ h1 a .second {
 
     .teaser {
         top: 50%;
-        left: -25%;
+        left: -20%;
         transform: translateY(50%);
         /* padding: 0px 0px 0px 60px; */
         width: inherit;
@@ -2379,24 +2422,39 @@ h1 a .second {
     }
 
     .teaser3 {
-        max-width: 40%;
+        max-width: 60%;
+        padding: 20px 0px 20px 20px;
+        border-radius: 16px;
         top: 0%;
-        left: 50%;
+        left: 30%;
         transform: translateY(50%);
         width: inherit;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: -webkit-linear-gradient(#7ba8b7, #a4d4e4);
     }
 
     .teaser3 .first {
+        width: 100%;
         text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
         display: block;
+        text-align: left;
         font-size: 2rem;
         margin-bottom: 0.5rem;
     }
 
     .teaser3 .second {
+        width: 100%;
         text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
         display: block;
-        font-size: 1.5rem;
+        font-size: 1.25rem;
+    }
+
+    .teaser3 a {
+        width: 50%;
+        font-size: 1.25rem;
     }
 
     .scroll-down {
@@ -2484,9 +2542,9 @@ h1 a .second {
         justify-content: center;
         align-items: center;
         position: absolute;
-        top: 60%;
+        top: 50%;
         transform: translateX(-50%);
-        left: 70%;
+        left: 60%;
         box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
         color: white;
     }
@@ -2502,6 +2560,11 @@ h1 a .second {
         text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
         display: block;
         font-size: 1.25rem;
+    }
+
+    .teaser3 a {
+        width: 33%;
+        font-size: 1.75rem;
     }
 
     .main_control {
@@ -3008,6 +3071,10 @@ h1 a .second {
 
     .box9 ul {
         padding-inline-start: 100px !important;
+    }
+
+    #appointmentForm .apointmentNote {
+        align-items: center;
     }
 
     .footer_phone {
