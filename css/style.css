@@ -708,13 +708,13 @@ h1 a .second {
     width: 100%;
     padding: 0.5rem 1rem;
     color: white;
-    border-color: #318f01;
+    border-color: #01708f;
     border-width: 2px;
     box-shadow: black 2px 2px 3px;
     font: 700 1.5rem "Roboto Slab", sans-serif;
     border-radius: 16px;
     transition: all ease-in-out 0.5s;
-    background: linear-gradient(45deg, #46cd02, #3db302);
+    background: linear-gradient(45deg, #02cacd, #02b0b3);
     animation: pulse 2s infinite;
     position: relative;
     z-index: 10;
@@ -729,7 +729,7 @@ h1 a .second {
 
 @keyframes pulse {
     0% {
-        box-shadow: 0 0 0 0 rgba(70, 205, 2, 0.7);
+        box-shadow: 0 0 0 0 #02b0b3;
     }
 
     70% {
