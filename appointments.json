@@ -170,6 +170,11 @@
     "IdGabinete": 4
   },
   {
+    "DataInicio": "2025-11-04T10:00:00.000Z",
+    "DataFim": "2025-11-04T10:20:00.000Z",
+    "IdGabinete": 1
+  },
+  {
     "DataInicio": "2025-11-04T10:20:00.000Z",
     "DataFim": "2025-11-04T10:40:00.000Z",
     "IdGabinete": 1
@@ -948,6 +953,11 @@
     "DataInicio": "2025-11-25T09:00:00.000Z",
     "DataFim": "2025-11-25T14:00:00.000Z",
     "IdGabinete": null
+  },
+  {
+    "DataInicio": "2025-11-25T17:30:00.000Z",
+    "DataFim": "2025-11-25T18:00:00.000Z",
+    "IdGabinete": 2
   },
   {
     "DataInicio": "2025-11-26T11:00:00.000Z",
