@@ -4,41 +4,95 @@ import emailjs from '@emailjs/browser';
 
 emailjs.init("c0UqVFYtByUWzi-5c");
 
+/**
+ * =========================
+ * AVAILABILITY CONFIGURATION
+ * =========================
+ *
+ * Each clinic location has one or more specialties.
+ * For each specialty, you define availability by weekday (1 = Monday ... 5 = Friday).
+ *
+ * Structure:
+ *  availability = {
+ *      "LocationName": {
+ *          SpecialtyIndex: {
+ *              daySlots: {
+ *                  <weekdayNumber>: [
+ *                      {
+ *                          start: "HH:MM",   // Start time (24h format)
+ *                          end: "HH:MM",     // End time (24h format)
+ *
+ *                          // --- Optional parameters controlling repetition ---
+ *
+ *                          repeat: "weekly" | "biweekly" | "monthly"
+ *                              - "weekly"   → (default) repeats every week
+ *                              - "biweekly" → repeats every 2 weeks starting from 'startDate'
+ *                              - "monthly"  → repeats once per month on the 'dayOfMonth'
+ *
+ *                          // For biweekly slots:
+ *                          startDate: "YYYY-MM-DD"
+ *                              → the starting week for the 2-week cycle
+ *                              → determines whether this week is the "on" or "off" week
+ *
+ *                          // For monthly slots:
+ *                          dayOfMonth: <number>
+ *                              → the calendar day (1–31) the slot applies to
+ *                              → e.g., { repeat: "monthly", dayOfMonth: 10 } = 10th of each month
+ *                      }
+ *                  ]
+ *              }
+ *          }
+ *      }
+ *  };
+ *
+ * Example:
+ *  const availability = {
+ *      "Porto": {
+ *          1: { // Ginecologia/Obstetrícia
+ *              daySlots: {
+ *                  2: [ // Tuesday
+ *                      { start: "12:00", end: "14:00", repeat: "weekly" },
+ *                      { start: "15:00", end: "19:00", repeat: "biweekly", startDate: "2025-10-21" }
+ *                  ],
+ *                  5: [ // Friday
+ *                      { start: "9:00", end: "13:20", repeat: "monthly", dayOfMonth: 10 },
+ *                      { start: "15:00", end: "19:00" } // weekly by default
+ *                  ]
+ *              }
+ *          }
+ *      }
+ *  };
+ */
+
 const availability = {
     "Porto": {
         1: { // Ginecologia/Obstetrícia
             daySlots: {
                 2: [  // Tuesday
-                    { start: "10:20", end: "13:20" },
+                    { start: "12:00", end: "14:00" },
                     { start: "15:00", end: "19:00" }
                 ],
                 5: [  // Friday
-                    { start: "10:20", end: "13:20" },
+                    { start: "9:00", end: "13:20" },
                     { start: "15:00", end: "19:00" }
-                ]
-            }
-        },
-        2: { // Pediatria
-            daySlots: {
-                2: [
-                    { start: "15:00", end: "18:00" }
                 ]
             }
         }
     },
     "Santo Tirso": {
-        1: { // Ginecologia/Obstetrícia
+        1: {
             daySlots: {
-                1: [ // Monday
+                1: [
                     { start: "15:00", end: "19:00" }
                 ],
-                3: [ // Wednesday
-                    { start: "09:00", end: "12:40" }
+                3: [
+                    { start: "09:00", end: "12:40", repeat: "biweekly", startDate: "2025-10-29" }
                 ]
             }
         }
     }
 };
+
 
 const version = process.env.VERSION;
 let calendarRules = { blockedDates: [], holidaysMessage: '' };
@@ -118,6 +172,46 @@ function getMonday(d) {
     const day = d.getUTCDay(),
         diff = d.getUTCDate() - day + (day === 0 ? -6 : 1);
     return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), diff));
+}
+
+// Get ISO week number
+function getWeekNumber(date) {
+    const d = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+}
+
+// Get the difference in full weeks between two dates (ISO weeks)
+function weeksBetween(date1, date2) {
+    const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
+    const diff = (Date.UTC(date2.getUTCFullYear(), date2.getUTCMonth(), date2.getUTCDate()) -
+        Date.UTC(date1.getUTCFullYear(), date1.getUTCMonth(), date1.getUTCDate()));
+    return Math.floor(diff / oneWeekMs);
+}
+
+// Determine if a slot should show based on its repeat rule
+function shouldShowSlotThisWeek(slot, date) {
+    const repeat = slot.repeat || "weekly";
+
+    // --- Weekly ---
+    if (repeat === "weekly") return true;
+
+    // --- Biweekly ---
+    if (repeat === "biweekly" && slot.startDate) {
+        const start = new Date(slot.startDate + "T00:00:00Z");
+        const weeksDiff = weeksBetween(start, date);
+        return weeksDiff % 2 === 0 && date >= start;
+    }
+
+    // --- Monthly ---
+    if (repeat === "monthly" && slot.dayOfMonth) {
+        const sameMonth = date.getUTCDate() === slot.dayOfMonth;
+        return sameMonth;
+    }
+
+    // fallback if repeat data missing
+    return true;
 }
 
 // ---------------------- CALENDAR RENDERING ----------------------
@@ -213,7 +307,9 @@ function renderCalendar(startDate) {
             const isWithinAvailability = daySlots.some(slot => {
                 const start = timeToUTCDate(dayDate, slot.start);
                 const end = timeToUTCDate(dayDate, slot.end);
-                return cellTime >= start && cellTime < end && cellTime >= tomorrowUTC;
+                const slotDay = dayDate.getUTCDay();
+                const showThisWeek = shouldShowSlotThisWeek({ ...slot, day: slotDay }, dayDate);
+                return showThisWeek && cellTime >= start && cellTime < end && cellTime >= tomorrowUTC;
             });
 
             // --- Check blocked / open exceptions ---
