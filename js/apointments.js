@@ -77,6 +77,13 @@ const availability = {
                     { start: "15:00", end: "19:00" }
                 ]
             }
+        },
+        2: { // Pediatria
+            daySlots: {
+                2: [
+                    { start: "15:00", end: "18:00" }
+                ]
+            }
         }
     },
     "Santo Tirso": {
