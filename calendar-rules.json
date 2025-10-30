@@ -118,17 +118,22 @@
         ]
     },
     "openExceptions": {
-        "1": [
-            {
-                "DataInicio": "2025-11-04T10:40:00.000Z",
-                "DataFim": "2025-11-04T12:00:00.000Z"
-            },
-            {
-                "DataInicio": "2025-11-11T10:40:00.000Z",
-                "DataFim": "2025-11-11T12:00:00.000Z"
-            }
-        ],
-        "2": []
+        "Porto": {
+            "1": [
+                {
+                    "DataInicio": "2025-11-04T10:40:00.000Z",
+                    "DataFim": "2025-11-04T12:00:00.000Z"
+                },
+                {
+                    "DataInicio": "2025-11-11T10:40:00.000Z",
+                    "DataFim": "2025-11-11T12:00:00.000Z"
+                }
+            ],
+            "2": []
+        },
+        "SantoTirso": {
+            "1": []
+        }
     },
     "holidaysMessage": "Encontramo-nos em férias!"
 }
