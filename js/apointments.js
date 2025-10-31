@@ -245,6 +245,8 @@ window.prevStep = function () {
     showStep(currentStep);
 };
 
+// ---------------------- CALENDAR RENDERING ----------------------
+
 function renderCalendar(startDate) {
     selectedSlotInput.value = "";
     const settings = availability[location.value]?.[specialty.selectedIndex];
@@ -276,7 +278,6 @@ function renderCalendar(startDate) {
         if (specialty.selectedIndex === 1) gabineteId = 4;
     }
 
-    // --- Get booked slots ---
     const bookedSlots = appointments
         .filter(a => a.IdGabinete === gabineteId)
         .map(a => ({
@@ -284,7 +285,6 @@ function renderCalendar(startDate) {
             end: parseUTC(a.DataFim)
         }));
 
-    // --- Generate days Mon–Fri ---
     const days = [...Array(5)].map((_, i) => {
         const date = new Date(startDate);
         date.setUTCDate(startDate.getUTCDate() + i);
@@ -314,21 +314,17 @@ function renderCalendar(startDate) {
             const isWithinAvailability = daySlots.some(slot => {
                 const start = timeToUTCDate(dayDate, slot.start);
                 const end = timeToUTCDate(dayDate, slot.end);
-                const slotDay = dayDate.getUTCDay();
-                const showThisWeek = shouldShowSlotThisWeek({ ...slot, day: slotDay }, dayDate);
+                const showThisWeek = shouldShowSlotThisWeek({ ...slot, day }, dayDate);
                 return showThisWeek && cellTime >= start && cellTime < end && cellTime >= tomorrowUTC;
             });
 
-            // --- Check blocked / open exceptions ---
             const blockedDates = calendarRules.holidays?.[specialty.selectedIndex] || [];
-            const openDates = calendarRules.openExceptions?.[specialty.selectedIndex] || [];
+            const openDates = (calendarRules.openExceptions?.[location.value]?.[specialty.selectedIndex]) || [];
 
             const isBlocked = blockedDates.some(d => cellTime >= parseUTC(d.DataInicio) && cellTime < parseUTC(d.DataFim));
             const isOpen = openDates.some(d => cellTime >= parseUTC(d.DataInicio) && cellTime < parseUTC(d.DataFim));
 
-            // --- Check booked slots (only consider available or open slots) ---
             const isBooked = bookedSlots.some(b => cellTime >= b.start && cellTime < b.end && (isWithinAvailability || isOpen));
-
             const isAvailable = ((isWithinAvailability || isOpen) && !isBooked && !isBlocked) || isOpen;
 
             const label = `${dayDate.toLocaleDateString()} ${timeStr}`;
@@ -340,7 +336,7 @@ function renderCalendar(startDate) {
                 cssClass = "booked-slot";
                 tooltip = "Horário já ocupado";
             } else if (isBlocked && !isOpen) {
-                tooltip = calendarRules.holidaysMessage;
+                tooltip = calendarRules.holidaysMessage || "Encontramo-nos em férias!";
             } else if (isOpen) {
                 tooltip = "Aberto excecionalmente";
             }
