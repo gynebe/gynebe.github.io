@@ -1300,6 +1300,11 @@
     "IdGabinete": 1
   },
   {
+    "DataInicio": "2026-01-06T14:00:00.000Z",
+    "DataFim": "2026-01-06T14:20:00.000Z",
+    "IdGabinete": 1
+  },
+  {
     "DataInicio": "2026-01-06T14:20:00.000Z",
     "DataFim": "2026-01-06T14:35:00.000Z",
     "IdGabinete": 1
