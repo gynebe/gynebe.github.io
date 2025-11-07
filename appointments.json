@@ -725,6 +725,11 @@
     "IdGabinete": null
   },
   {
+    "DataInicio": "2025-11-25T17:00:00.000Z",
+    "DataFim": "2025-11-25T17:30:00.000Z",
+    "IdGabinete": 2
+  },
+  {
     "DataInicio": "2025-11-25T17:30:00.000Z",
     "DataFim": "2025-11-25T18:00:00.000Z",
     "IdGabinete": 2
