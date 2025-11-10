@@ -3005,6 +3005,16 @@
     "IdGabinete": 4
   },
   {
+    "DataInicio": "2026-04-20T16:20:00.000Z",
+    "DataFim": "2026-04-20T16:40:00.000Z",
+    "IdGabinete": 4
+  },
+  {
+    "DataInicio": "2026-04-20T16:40:00.000Z",
+    "DataFim": "2026-04-20T17:00:00.000Z",
+    "IdGabinete": 4
+  },
+  {
     "DataInicio": "2026-04-20T17:40:00.000Z",
     "DataFim": "2026-04-20T18:00:00.000Z",
     "IdGabinete": 4
