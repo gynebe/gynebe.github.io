@@ -1,15 +1,5 @@
 [
   {
-    "DataInicio": "2025-11-12T09:00:00.000Z",
-    "DataFim": "2025-11-12T09:20:00.000Z",
-    "IdGabinete": 4
-  },
-  {
-    "DataInicio": "2025-11-12T09:20:00.000Z",
-    "DataFim": "2025-11-12T09:40:00.000Z",
-    "IdGabinete": 4
-  },
-  {
     "DataInicio": "2025-11-12T09:40:00.000Z",
     "DataFim": "2025-11-12T10:00:00.000Z",
     "IdGabinete": 4
