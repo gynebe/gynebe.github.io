@@ -325,7 +325,9 @@ function renderCalendar(startDate) {
             const isOpen = openDates.some(d => cellTime >= parseUTC(d.DataInicio) && cellTime < parseUTC(d.DataFim));
 
             const isBooked = bookedSlots.some(b => cellTime >= b.start && cellTime < b.end && (isWithinAvailability || isOpen));
-            const isAvailable = ((isWithinAvailability || isOpen) && !isBooked && !isBlocked) || isOpen;
+            const isFutureOrToday = cellTime >= nowUTC;
+            const isAvailable = isFutureOrToday && ((isWithinAvailability || isOpen) && !isBooked && !isBlocked);
+
 
             const label = `${dayDate.toLocaleDateString()} ${timeStr}`;
 
