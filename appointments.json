@@ -2205,6 +2205,11 @@
     "IdGabinete": 1
   },
   {
+    "DataInicio": "2026-03-10T17:40:00.000Z",
+    "DataFim": "2026-03-10T18:00:00.000Z",
+    "IdGabinete": 1
+  },
+  {
     "DataInicio": "2026-03-10T18:00:00.000Z",
     "DataFim": "2026-03-10T18:20:00.000Z",
     "IdGabinete": 1
@@ -2837,6 +2842,11 @@
   {
     "DataInicio": "2026-05-05T17:40:00.000Z",
     "DataFim": "2026-05-05T18:00:00.000Z",
+    "IdGabinete": 1
+  },
+  {
+    "DataInicio": "2026-05-05T18:00:00.000Z",
+    "DataFim": "2026-05-05T18:20:00.000Z",
     "IdGabinete": 1
   },
   {
