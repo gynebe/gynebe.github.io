@@ -55,11 +55,6 @@
     "IdGabinete": 4
   },
   {
-    "DataInicio": "2025-11-24T15:40:00.000Z",
-    "DataFim": "2025-11-24T16:00:00.000Z",
-    "IdGabinete": 4
-  },
-  {
     "DataInicio": "2025-11-24T16:00:00.000Z",
     "DataFim": "2025-11-24T16:20:00.000Z",
     "IdGabinete": 4
@@ -67,6 +62,11 @@
   {
     "DataInicio": "2025-11-24T16:20:00.000Z",
     "DataFim": "2025-11-24T16:40:00.000Z",
+    "IdGabinete": 4
+  },
+  {
+    "DataInicio": "2025-11-24T16:40:00.000Z",
+    "DataFim": "2025-11-24T17:00:00.000Z",
     "IdGabinete": 4
   },
   {
