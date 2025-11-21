@@ -330,6 +330,11 @@
     "IdGabinete": 1
   },
   {
+    "DataInicio": "2025-12-09T13:20:00.000Z",
+    "DataFim": "2025-12-09T13:40:00.000Z",
+    "IdGabinete": 1
+  },
+  {
     "DataInicio": "2025-12-09T14:00:00.000Z",
     "DataFim": "2025-12-09T14:20:00.000Z",
     "IdGabinete": 1
@@ -392,6 +397,11 @@
   {
     "DataInicio": "2025-12-12T11:40:00.000Z",
     "DataFim": "2025-12-12T12:00:00.000Z",
+    "IdGabinete": 1
+  },
+  {
+    "DataInicio": "2025-12-12T12:00:00.000Z",
+    "DataFim": "2025-12-12T12:20:00.000Z",
     "IdGabinete": 1
   },
   {
