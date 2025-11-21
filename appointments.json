@@ -1615,6 +1615,11 @@
     "IdGabinete": 1
   },
   {
+    "DataInicio": "2026-02-06T09:20:00.000Z",
+    "DataFim": "2026-02-06T09:40:00.000Z",
+    "IdGabinete": 1
+  },
+  {
     "DataInicio": "2026-02-06T10:20:00.000Z",
     "DataFim": "2026-02-06T10:40:00.000Z",
     "IdGabinete": 1
