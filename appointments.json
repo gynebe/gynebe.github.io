@@ -3065,6 +3065,11 @@
     "IdGabinete": 4
   },
   {
+    "DataInicio": "2026-05-27T10:00:00.000Z",
+    "DataFim": "2026-05-27T10:20:00.000Z",
+    "IdGabinete": 4
+  },
+  {
     "DataInicio": "2026-05-27T12:00:00.000Z",
     "DataFim": "2026-05-27T12:20:00.000Z",
     "IdGabinete": 4
