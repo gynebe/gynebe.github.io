@@ -1,20 +1,5 @@
 [
   {
-    "DataInicio": "2026-02-06T17:40:00.000Z",
-    "DataFim": "2026-02-06T18:00:00.000Z",
-    "IdGabinete": 1
-  },
-  {
-    "DataInicio": "2026-02-06T17:40:00.000Z",
-    "DataFim": "2026-02-06T18:00:00.000Z",
-    "IdGabinete": 1
-  },
-  {
-    "DataInicio": "2026-02-06T18:00:00.000Z",
-    "DataFim": "2026-02-06T18:20:00.000Z",
-    "IdGabinete": 1
-  },
-  {
     "DataInicio": "2026-02-06T18:20:00.000Z",
     "DataFim": "2026-02-06T18:40:00.000Z",
     "IdGabinete": 1
