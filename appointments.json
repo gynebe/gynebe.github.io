@@ -1010,6 +1010,11 @@
     "IdGabinete": 1
   },
   {
+    "DataInicio": "2026-03-17T18:40:00.000Z",
+    "DataFim": "2026-03-17T19:00:00.000Z",
+    "IdGabinete": 1
+  },
+  {
     "DataInicio": "2026-03-18T09:20:00.000Z",
     "DataFim": "2026-03-18T09:40:00.000Z",
     "IdGabinete": 4
