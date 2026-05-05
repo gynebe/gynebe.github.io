@@ -970,6 +970,11 @@
     "IdGabinete": null
   },
   {
+    "DataInicio": "2026-06-30T18:30:00.000Z",
+    "DataFim": "2026-06-30T19:00:00.000Z",
+    "IdGabinete": 2
+  },
+  {
     "DataInicio": "2026-07-03T09:40:00.000Z",
     "DataFim": "2026-07-03T10:00:00.000Z",
     "IdGabinete": 1
