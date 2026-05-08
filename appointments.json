@@ -1,10 +1,5 @@
 [
   {
-    "DataInicio": "2026-05-08T17:00:00.000Z",
-    "DataFim": "2026-05-08T20:20:00.000Z",
-    "IdGabinete": null
-  },
-  {
     "DataInicio": "2026-05-08T17:20:00.000Z",
     "DataFim": "2026-05-08T17:40:00.000Z",
     "IdGabinete": 1
@@ -103,6 +98,11 @@
     "DataInicio": "2026-05-12T16:30:00.000Z",
     "DataFim": "2026-05-12T17:00:00.000Z",
     "IdGabinete": 2
+  },
+  {
+    "DataInicio": "2026-05-12T16:40:00.000Z",
+    "DataFim": "2026-05-12T17:00:00.000Z",
+    "IdGabinete": 1
   },
   {
     "DataInicio": "2026-05-12T17:00:00.000Z",
