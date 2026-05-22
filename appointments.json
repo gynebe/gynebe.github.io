@@ -1230,6 +1230,11 @@
     "IdGabinete": 1
   },
   {
+    "DataInicio": "2026-07-14T16:40:00.000Z",
+    "DataFim": "2026-07-14T17:00:00.000Z",
+    "IdGabinete": 1
+  },
+  {
     "DataInicio": "2026-07-17T10:00:00.000Z",
     "DataFim": "2026-07-17T10:20:00.000Z",
     "IdGabinete": 1
@@ -2388,6 +2393,26 @@
     "DataInicio": "2026-09-22T18:30:00.000Z",
     "DataFim": "2026-09-22T19:00:00.000Z",
     "IdGabinete": 2
+  },
+  {
+    "DataInicio": "2026-09-25T15:00:00.000Z",
+    "DataFim": "2026-09-25T15:20:00.000Z",
+    "IdGabinete": 1
+  },
+  {
+    "DataInicio": "2026-09-25T15:20:00.000Z",
+    "DataFim": "2026-09-25T15:40:00.000Z",
+    "IdGabinete": 1
+  },
+  {
+    "DataInicio": "2026-09-25T15:40:00.000Z",
+    "DataFim": "2026-09-25T16:00:00.000Z",
+    "IdGabinete": 1
+  },
+  {
+    "DataInicio": "2026-09-25T16:00:00.000Z",
+    "DataFim": "2026-09-25T16:20:00.000Z",
+    "IdGabinete": 1
   },
   {
     "DataInicio": "2026-09-28T12:00:00.000Z",
