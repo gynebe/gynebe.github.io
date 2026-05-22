@@ -1,15 +1,5 @@
 [
   {
-    "DataInicio": "2026-05-22T11:20:00.000Z",
-    "DataFim": "2026-05-22T11:40:00.000Z",
-    "IdGabinete": 1
-  },
-  {
-    "DataInicio": "2026-05-22T11:20:00.000Z",
-    "DataFim": "2026-05-22T11:40:00.000Z",
-    "IdGabinete": 1
-  },
-  {
     "DataInicio": "2026-05-22T11:40:00.000Z",
     "DataFim": "2026-05-22T12:00:00.000Z",
     "IdGabinete": 1
@@ -136,13 +126,13 @@
   },
   {
     "DataInicio": "2026-05-26T16:00:00.000Z",
-    "DataFim": "2026-05-26T16:30:00.000Z",
-    "IdGabinete": 2
+    "DataFim": "2026-05-26T16:20:00.000Z",
+    "IdGabinete": 1
   },
   {
     "DataInicio": "2026-05-26T16:00:00.000Z",
-    "DataFim": "2026-05-26T16:20:00.000Z",
-    "IdGabinete": 1
+    "DataFim": "2026-05-26T16:30:00.000Z",
+    "IdGabinete": 2
   },
   {
     "DataInicio": "2026-05-26T16:20:00.000Z",
@@ -330,6 +320,11 @@
     "IdGabinete": 1
   },
   {
+    "DataInicio": "2026-06-02T16:00:00.000Z",
+    "DataFim": "2026-06-02T16:20:00.000Z",
+    "IdGabinete": 1
+  },
+  {
     "DataInicio": "2026-06-02T16:20:00.000Z",
     "DataFim": "2026-06-02T16:40:00.000Z",
     "IdGabinete": 1
@@ -472,6 +467,11 @@
   {
     "DataInicio": "2026-06-05T18:20:00.000Z",
     "DataFim": "2026-06-05T18:40:00.000Z",
+    "IdGabinete": 1
+  },
+  {
+    "DataInicio": "2026-06-09T12:40:00.000Z",
+    "DataFim": "2026-06-09T13:00:00.000Z",
     "IdGabinete": 1
   },
   {
@@ -737,6 +737,11 @@
   {
     "DataInicio": "2026-07-03T11:20:00.000Z",
     "DataFim": "2026-07-03T11:40:00.000Z",
+    "IdGabinete": 1
+  },
+  {
+    "DataInicio": "2026-07-03T11:40:00.000Z",
+    "DataFim": "2026-07-03T12:00:00.000Z",
     "IdGabinete": 1
   },
   {
@@ -1685,6 +1690,11 @@
     "IdGabinete": 1
   },
   {
+    "DataInicio": "2026-08-07T15:00:00.000Z",
+    "DataFim": "2026-08-07T15:20:00.000Z",
+    "IdGabinete": 1
+  },
+  {
     "DataInicio": "2026-08-07T18:40:00.000Z",
     "DataFim": "2026-08-07T19:00:00.000Z",
     "IdGabinete": 1
@@ -1957,6 +1967,11 @@
   {
     "DataInicio": "2026-09-11T11:20:00.000Z",
     "DataFim": "2026-09-11T11:40:00.000Z",
+    "IdGabinete": 1
+  },
+  {
+    "DataInicio": "2026-09-11T11:40:00.000Z",
+    "DataFim": "2026-09-11T12:00:00.000Z",
     "IdGabinete": 1
   },
   {
