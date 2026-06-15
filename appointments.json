@@ -151,23 +151,23 @@
   },
   {
     "DataInicio": "2026-06-16T16:00:00.000Z",
-    "DataFim": "2026-06-16T16:30:00.000Z",
-    "IdGabinete": 2
-  },
-  {
-    "DataInicio": "2026-06-16T16:00:00.000Z",
     "DataFim": "2026-06-16T16:20:00.000Z",
     "IdGabinete": 1
   },
   {
-    "DataInicio": "2026-06-16T16:20:00.000Z",
-    "DataFim": "2026-06-16T16:40:00.000Z",
-    "IdGabinete": 1
+    "DataInicio": "2026-06-16T16:00:00.000Z",
+    "DataFim": "2026-06-16T16:30:00.000Z",
+    "IdGabinete": 2
   },
   {
     "DataInicio": "2026-06-16T16:20:00.000Z",
     "DataFim": "2026-06-16T16:50:00.000Z",
     "IdGabinete": 2
+  },
+  {
+    "DataInicio": "2026-06-16T16:20:00.000Z",
+    "DataFim": "2026-06-16T16:40:00.000Z",
+    "IdGabinete": 1
   },
   {
     "DataInicio": "2026-06-16T16:40:00.000Z",
@@ -631,13 +631,13 @@
   },
   {
     "DataInicio": "2026-07-07T16:00:00.000Z",
-    "DataFim": "2026-07-07T16:30:00.000Z",
-    "IdGabinete": 2
+    "DataFim": "2026-07-07T16:20:00.000Z",
+    "IdGabinete": 1
   },
   {
     "DataInicio": "2026-07-07T16:00:00.000Z",
-    "DataFim": "2026-07-07T16:20:00.000Z",
-    "IdGabinete": 1
+    "DataFim": "2026-07-07T16:30:00.000Z",
+    "IdGabinete": 2
   },
   {
     "DataInicio": "2026-07-07T16:20:00.000Z",
