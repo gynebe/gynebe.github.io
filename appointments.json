@@ -1,10 +1,5 @@
 [
   {
-    "DataInicio": "2026-06-15T17:20:00.000Z",
-    "DataFim": "2026-06-15T17:40:00.000Z",
-    "IdGabinete": 4
-  },
-  {
     "DataInicio": "2026-06-15T17:40:00.000Z",
     "DataFim": "2026-06-15T18:00:00.000Z",
     "IdGabinete": 4
@@ -3168,6 +3163,11 @@
     "DataInicio": "2027-01-06T00:00:00.000Z",
     "DataFim": "2027-01-06T23:59:59.000Z",
     "IdGabinete": null
+  },
+  {
+    "DataInicio": "2027-01-06T10:00:00.000Z",
+    "DataFim": "2027-01-06T10:20:00.000Z",
+    "IdGabinete": 4
   },
   {
     "DataInicio": "2027-01-08T17:00:00.000Z",
