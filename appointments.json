@@ -255,6 +255,11 @@
     "IdGabinete": 1
   },
   {
+    "DataInicio": "2026-06-19T13:00:00.000Z",
+    "DataFim": "2026-06-19T13:20:00.000Z",
+    "IdGabinete": 1
+  },
+  {
     "DataInicio": "2026-06-19T13:40:00.000Z",
     "DataFim": "2026-06-19T14:00:00.000Z",
     "IdGabinete": 1
@@ -572,6 +577,11 @@
   {
     "DataInicio": "2026-07-06T17:20:00.000Z",
     "DataFim": "2026-07-06T17:40:00.000Z",
+    "IdGabinete": 4
+  },
+  {
+    "DataInicio": "2026-07-06T17:40:00.000Z",
+    "DataFim": "2026-07-06T18:00:00.000Z",
     "IdGabinete": 4
   },
   {
