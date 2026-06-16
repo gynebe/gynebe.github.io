@@ -55,6 +55,11 @@
     "IdGabinete": 1
   },
   {
+    "DataInicio": "2026-06-16T14:40:00.000Z",
+    "DataFim": "2026-06-16T14:55:00.000Z",
+    "IdGabinete": 1
+  },
+  {
     "DataInicio": "2026-06-16T15:20:00.000Z",
     "DataFim": "2026-06-16T15:40:00.000Z",
     "IdGabinete": 1
@@ -298,6 +303,11 @@
     "DataInicio": "2026-06-24T00:00:00.000Z",
     "DataFim": "2026-06-24T23:59:59.000Z",
     "IdGabinete": null
+  },
+  {
+    "DataInicio": "2026-06-26T09:30:00.000Z",
+    "DataFim": "2026-06-26T09:50:00.000Z",
+    "IdGabinete": 1
   },
   {
     "DataInicio": "2026-06-26T15:00:00.000Z",
