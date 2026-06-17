@@ -320,6 +320,16 @@
     "IdGabinete": 1
   },
   {
+    "DataInicio": "2026-07-03T16:20:00.000Z",
+    "DataFim": "2026-07-03T16:40:00.000Z",
+    "IdGabinete": 1
+  },
+  {
+    "DataInicio": "2026-07-03T16:40:00.000Z",
+    "DataFim": "2026-07-03T17:00:00.000Z",
+    "IdGabinete": 1
+  },
+  {
     "DataInicio": "2026-07-03T17:00:00.000Z",
     "DataFim": "2026-07-03T20:20:00.000Z",
     "IdGabinete": null
