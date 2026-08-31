@@ -1290,6 +1290,11 @@
     "IdGabinete": 2
   },
   {
+    "DataInicio": "2026-09-29T16:30:00.000Z",
+    "DataFim": "2026-09-29T17:00:00.000Z",
+    "IdGabinete": null
+  },
+  {
     "DataInicio": "2026-09-29T17:00:00.000Z",
     "DataFim": "2026-09-29T17:45:00.000Z",
     "IdGabinete": 2
