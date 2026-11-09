@@ -2896,13 +2896,13 @@
   },
   {
     "DataInicio": "2027-04-13T18:00:00.000Z",
-    "DataFim": "2027-04-13T18:30:00.000Z",
-    "IdGabinete": 2
+    "DataFim": "2027-04-13T18:20:00.000Z",
+    "IdGabinete": 1
   },
   {
     "DataInicio": "2027-04-13T18:00:00.000Z",
-    "DataFim": "2027-04-13T18:20:00.000Z",
-    "IdGabinete": 1
+    "DataFim": "2027-04-13T18:30:00.000Z",
+    "IdGabinete": 2
   },
   {
     "DataInicio": "2027-04-13T18:20:00.000Z",
