@@ -2005,6 +2005,11 @@
     "IdGabinete": 1
   },
   {
+    "DataInicio": "2027-03-09T13:20:00.000Z",
+    "DataFim": "2027-03-09T13:40:00.000Z",
+    "IdGabinete": 1
+  },
+  {
     "DataInicio": "2027-03-09T15:00:00.000Z",
     "DataFim": "2027-03-09T15:20:00.000Z",
     "IdGabinete": 1
